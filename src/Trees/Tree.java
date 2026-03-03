@@ -1,7 +1,10 @@
 package Trees;
-
+import java.util.Queue;
+import java.util.ArrayDeque;
 public class Tree {
     private Node root;
+    final private Queue<Node> queue = new ArrayDeque<>();
+    private Node currentNode = this.root;
 
     public Node getNode() {
         return root;
@@ -19,53 +22,36 @@ public class Tree {
     }
     public void insert(Integer data){
         if(this.root==null){
-            root = new Node(data);
-            return;
-        } else if (root.getLeft()==null) {
-            root.setLeft(new Node(data));
-            return;
-        } else if (root.getRight()==null) {
-            root.setRight(new Node(data));
+            this.root = new Node(data);
+            currentNode = this.root;
             return;
         }
-        Node left = root.getLeft();
-        Node right = root.getRight();
-        while(left.getLeft()==null || left.getRight()==null){
-            if(left.getLeft()==null){
-                left.setLeft(new Node(data));
-                left = left.getLeft();
+        if(this.currentNode.getLeft()==null || this.currentNode.getRight()==null){
+            if(this.currentNode.getLeft()==null) {
+                this.currentNode.setLeft(new Node(data));
                 return;
             }
-            else {
-                left.setRight(new Node(data));
-                left = left.getRight();
-                return;
+            if(this.currentNode.getRight()==null){
+                this.currentNode.setRight(new Node(data));
             }
         }
-        while(right.getLeft()==null || right.getRight()==null){
-            if(right.getLeft()==null){
-                right.setLeft(new Node(data));
-                right = right.getLeft();
-                return;
-            }
-            else {
-                right.setRight(new Node(data));
-                right = right.getRight();
-                return;
-            }
-        }
+        this.queue.offer(currentNode.getLeft());
+        this.queue.offer(currentNode.getRight());
+        this.currentNode = queue.poll();
     }
 
     public static void main(String[] args) {
         Tree tree = new Tree();
-        tree.insert(5);
+        tree.insert(1);
+        tree.insert(2);
+        tree.insert(3);
+        tree.insert(4);
         tree.insert(4);
         tree.insert(6);
         tree.insert(7);
         tree.insert(8);
         tree.insert(9);
-        tree.insert(10);
-        tree.insert(11);
+        tree.insert(0);
         System.out.println(tree);
     }
 }
