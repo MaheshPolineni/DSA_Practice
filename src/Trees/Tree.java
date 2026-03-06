@@ -10,6 +10,24 @@ public class Tree {
         return root;
     }
 
+    public void preOrder(Node node){
+        if(node == null){
+            return;
+        }
+        System.out.println(node.getValue());
+        preOrder(node.getLeft());
+        preOrder(node.getRight());
+    }
+
+    public void postOrder(Node node){
+        if(node == null){
+            return;
+        }
+        postOrder(node.getLeft());
+        postOrder(node.getRight());
+        System.out.println(node.getValue());
+    }
+
     public void setNode(Node node) {
         this.root = node;
     }
@@ -52,6 +70,6 @@ public class Tree {
         tree.insert(8);
         tree.insert(9);
         tree.insert(0);
-        System.out.println(tree);
+        tree.postOrder(tree.root);
     }
 }
