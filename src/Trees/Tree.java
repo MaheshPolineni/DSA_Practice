@@ -28,9 +28,35 @@ public class Tree {
         System.out.println(node.getValue());
     }
 
+    public void inOrder(Node node){
+        if(node == null){
+            return;
+        }
+        inOrder(node.getLeft());
+        System.out.println(node.getValue());
+        inOrder(node.getRight());
+    }
+
+    public void bfs(Node node){
+        Node currentNode = node;
+        Queue<Node> queue = new ArrayDeque<>();
+        while(currentNode!=null) {
+            System.out.println(currentNode.getValue());
+            if(currentNode.getLeft()!=null)
+                queue.offer(currentNode.getLeft());
+            if(currentNode.getRight()!=null)
+                queue.offer(currentNode.getRight());
+            currentNode = queue.poll();
+        }
+
+
+    }
+
     public void setNode(Node node) {
         this.root = node;
     }
+
+
 
     @Override
     public String toString() {
@@ -58,18 +84,39 @@ public class Tree {
         this.currentNode = queue.poll();
     }
 
+    public Node bst(Integer data, Node node){
+        if(node == null){
+            return node = new Node(data);
+        }
+        if(node.getValue()>data){
+           node.setLeft(bst(data,node.getLeft()));
+            return node;
+        }
+        if(node.getValue()<data){
+           node.setRight(bst(data,node.getRight()));
+            return node;
+        }
+        return null;
+    }
+
+    public void bstInsert(Integer data) {
+        if (root == null) {
+            root = new Node(data);
+            return;
+        }
+        bst(data,root);
+    }
+
     public static void main(String[] args) {
         Tree tree = new Tree();
-        tree.insert(1);
-        tree.insert(2);
-        tree.insert(3);
-        tree.insert(4);
-        tree.insert(4);
-        tree.insert(6);
-        tree.insert(7);
-        tree.insert(8);
-        tree.insert(9);
-        tree.insert(0);
-        tree.postOrder(tree.root);
+        tree.bstInsert(4);
+        tree.bstInsert(2);
+        tree.bstInsert(3);
+        tree.bstInsert(1);
+        tree.bstInsert(5);
+        tree.bstInsert(0);
+        tree.bstInsert(6);
+        System.out.println(tree);
+
     }
 }
