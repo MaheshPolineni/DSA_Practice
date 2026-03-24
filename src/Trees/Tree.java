@@ -1,4 +1,5 @@
 package Trees;
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.ArrayDeque;
 public class Tree {
@@ -28,13 +29,13 @@ public class Tree {
         System.out.println(node.getValue());
     }
 
-    public void inOrder(Node node){
+    public void inOrder(Node node, ArrayList<Integer> list){
         if(node == null){
             return;
         }
-        inOrder(node.getLeft());
-        System.out.println(node.getValue());
-        inOrder(node.getRight());
+        inOrder(node.getLeft(),list);
+        list.add(node.getValue());
+        inOrder(node.getRight(),list);
     }
 
     public void bfs(Node node){
@@ -96,7 +97,7 @@ public class Tree {
            node.setRight(bst(data,node.getRight()));
             return node;
         }
-        return null;
+        return node;
     }
 
     public void bstInsert(Integer data) {
@@ -107,16 +108,144 @@ public class Tree {
         bst(data,root);
     }
 
+    public Node findNode(Node node, Integer value){
+        Node currentNode = node;
+        while(currentNode!=null){
+            if(value<=currentNode.getValue()){
+                if(value== currentNode.getValue()){
+                    return currentNode;
+                }
+                else{
+                    currentNode = currentNode.getLeft();
+                    continue;
+                }
+            }
+            if(value> currentNode.getValue()){
+                if(value == currentNode.getValue()){
+                    return currentNode;
+                }
+                else{
+                    currentNode=currentNode.getRight();
+                }
+            }
+        }
+        return null;
+    }
+
+    public Integer successor(Node node, ArrayList<Integer> list){
+        inOrder(node, list);
+        if(list.indexOf(node.getValue())==list.size()-1 || !(list.contains(node.getValue()))){
+            return -1;
+        }
+        return list.get(list.indexOf(node.getValue())+1);
+    }
+
+//    public Integer inOrderSuccessor(Node node, Integer value){
+//        if(node==null){
+//            return -1;
+//        }
+//        ArrayList<Integer> list = new ArrayList<>();
+//        Node currentNode = node;
+//        while(currentNode!=null) {
+//            if (value <= currentNode.getValue()) {
+//                if (value == currentNode.getValue()) {
+//                    return successor(currentNode,list);
+//                } else {
+//                    currentNode = currentNode.getLeft();
+//                    continue;
+//                }
+//            }
+//                if(value>currentNode.getValue()){
+//                    currentNode = currentNode.getRight();
+//                }
+//        }
+//        return  -1;
+//    }
+    public static int height(Node root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int left = height(root.getLeft());
+        int right = height(root.getRight());
+
+        return 1 + Math.max(left, right);
+    }
+
+    public void deleteNode(Node node,Integer value){
+        Node currentNode = node;
+        Node parent = null;
+        while(currentNode!=null) {
+            if(currentNode.getValue()==value){
+                break;
+            }
+            if(value< currentNode.getValue()){
+                parent = currentNode;
+                currentNode=currentNode.getLeft();
+                continue;
+            }
+            if(value> currentNode.getValue()){
+                parent = currentNode;
+                currentNode = currentNode.getRight();
+            }
+        }
+        if (currentNode.getRight() == null && currentNode.getLeft() == null) {
+            if(parent.getLeft()!=null && parent.getLeft().getValue()==value){
+                parent.setLeft(null);
+                return;
+            }
+            else if(parent.getRight()!=null && parent.getRight().getValue()==value) {
+                parent.setRight(null);
+                return;
+            }
+        }
+
+        if((currentNode.getRight()!=null && currentNode.getLeft()==null) || (currentNode.getRight()==null && currentNode.getLeft()!=null)){
+            if(currentNode.getRight()!=null){
+                if(parent.getLeft().getValue()==value){
+                    parent.setLeft(currentNode.getRight());
+                    return;
+                }
+                else if(parent.getRight().getValue()==value) {
+                    parent.setRight(currentNode.getRight());
+                    return;
+                }
+            }
+            if(currentNode.getLeft()!=null){
+                if(parent.getLeft().getValue()==value){
+                    parent.setLeft(currentNode.getLeft());
+                    return;
+                }
+                else if(parent.getRight().getValue()==value) {
+                    parent.setRight(currentNode.getLeft());
+                    return;
+                }
+            }
+
+        }
+        System.out.println(node);
+    }
+
+
+
+
+
+
     public static void main(String[] args) {
         Tree tree = new Tree();
-        tree.bstInsert(4);
-        tree.bstInsert(2);
-        tree.bstInsert(3);
-        tree.bstInsert(1);
-        tree.bstInsert(5);
-        tree.bstInsert(0);
-        tree.bstInsert(6);
+        tree.bstInsert(50);
+        tree.bstInsert(20);
+        tree.bstInsert(70);
+        tree.bstInsert(30);
+        tree.bstInsert(40);
+        tree.bstInsert(60);
+        tree.bstInsert(80);
+        tree.bstInsert(25);
+        tree.bstInsert(35);
+        tree.bstInsert(65);
+        ArrayList<Integer> inOrderList = new ArrayList<>();
+        System.out.print(Tree.height(tree.root));
         System.out.println(tree);
-
+        tree.deleteNode(tree.root, 20);
     }
 }
